@@ -18,7 +18,6 @@ from onediff_hijack import do_hijack as onediff_do_hijack
 from onediff_lora import HijackLoraActivate
 from oneflow import __version__ as oneflow_version
 from ui_utils import (
-    all_compiler_caches_path,
     get_all_compiler_caches,
     hints_message,
     refresh_all_compiler_caches,
@@ -183,6 +182,8 @@ class Script(scripts.Script):
         saved_cache_name="",
         always_recompile=False,
     ):
+        
+        from ui_utils import all_compiler_caches_path
 
         global compiled_unet, compiled_ckpt_name, is_unet_quantized
         current_checkpoint = shared.opts.sd_model_checkpoint
