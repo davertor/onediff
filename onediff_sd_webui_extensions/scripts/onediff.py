@@ -25,6 +25,28 @@ from onediff.optimization.quant_optimizer import (
 )
 from onediff.utils import logger, parse_boolean_from_env
 
+def on_ui_settings():
+    section = ("onediff", "OneDiff")
+    shared.opts.add_option(
+        "onediff_compiler_caches_path",
+        shared.OptionInfo(
+            str(Path(__file__).parent.parent / "compiler_caches"),
+            "Directory for onediff compiler caches",
+            section=section,
+        ),
+    )
+
+
+script_callbacks.on_ui_settings(on_ui_settings)
+onediff_do_hijack()
+
+from ui_utils import (
+    all_compiler_caches_path,
+    get_all_compiler_caches,
+    hints_message,
+    refresh_all_compiler_caches,
+)
+
 """oneflow_compiled UNetModel"""
 compiled_unet = None
 is_unet_quantized = False
@@ -116,9 +138,7 @@ class Script(scripts.Script):
         The return value should be an array of all components that are used in processing.
         Values of those returned components will be passed to run() and process() functions.
         """
-        
-        from ui_utils import get_all_compiler_caches, refresh_all_compiler_caches, hints_message
-        
+                
         with gr.Row():
             # TODO: set choices as Tuple[str, str] after the version of gradio specified webui upgrades
             compiler_cache = gr.Dropdown(
@@ -181,8 +201,6 @@ class Script(scripts.Script):
         always_recompile=False,
     ):
         
-        from ui_utils import all_compiler_caches_path
-
         global compiled_unet, compiled_ckpt_name, is_unet_quantized
         current_checkpoint = shared.opts.sd_model_checkpoint
         original_diffusion_model = shared.sd_model.model.diffusion_model
@@ -247,17 +265,3 @@ class Script(scripts.Script):
         return proc
 
 
-def on_ui_settings():
-    section = ("onediff", "OneDiff")
-    shared.opts.add_option(
-        "onediff_compiler_caches_path",
-        shared.OptionInfo(
-            str(Path(__file__).parent.parent / "compiler_caches"),
-            "Directory for onediff compiler caches",
-            section=section,
-        ),
-    )
-
-
-script_callbacks.on_ui_settings(on_ui_settings)
-onediff_do_hijack()
