@@ -17,11 +17,6 @@ from modules.ui_common import create_refresh_button
 from onediff_hijack import do_hijack as onediff_do_hijack
 from onediff_lora import HijackLoraActivate
 from oneflow import __version__ as oneflow_version
-from ui_utils import (
-    get_all_compiler_caches,
-    hints_message,
-    refresh_all_compiler_caches,
-)
 
 from onediff import __version__ as onediff_version
 from onediff.optimization.quant_optimizer import (
@@ -121,6 +116,9 @@ class Script(scripts.Script):
         The return value should be an array of all components that are used in processing.
         Values of those returned components will be passed to run() and process() functions.
         """
+        
+        from ui_utils import get_all_compiler_caches, refresh_all_compiler_caches, hints_message
+        
         with gr.Row():
             # TODO: set choices as Tuple[str, str] after the version of gradio specified webui upgrades
             compiler_cache = gr.Dropdown(
